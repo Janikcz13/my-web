@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
     res.send('Server is running!');
 });
 
+// Endpoint to handle form submissions
 app.post('/submit', (req, res) => {
     const textData = req.body.text + "\n---\n";
 
@@ -24,4 +25,17 @@ app.post('/submit', (req, res) => {
     });
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+// ✅ New route to view submissions
+app.get('/submissions', (req, res) => {
+    fs.readFile(__dirname + '/submissions.txt', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading file:', err);
+            return res.status(500).json({ message: 'Error reading submissions' });
+        }
+        res.send(`<pre>${data}</pre>`);
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
