@@ -7,6 +7,11 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Fix for "Cannot GET /"
+app.get('/', (req, res) => {
+    res.send('Server is running!');
+});
+
 app.post('/submit', (req, res) => {
     const textData = req.body.text + "\n---\n";
 
