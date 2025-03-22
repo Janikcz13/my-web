@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Něco mi napiš</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            flex-direction: column;
+        }
+        .square {
+            width: calc(100% - 400px);
+            height: calc(100% - 400px);
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            padding: 10px;
+            box-sizing: border-box;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 20px;
+            border: 10px solid green;
+        }
+        .square textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 18px;
+            text-align: center;
+            border-radius: 10px;
+            background: transparent;
+            padding: 10px;
+        }
+        .counter-container {
+            width: calc(100% - 400px);
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+            padding-right: 10px;
+        }
+        .char-counter {
+            font-size: 16px;
+            color: gray;
+        }
+        #submitButton {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid green;
+            background-color: white;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="square">
+        <textarea placeholder="Piš!!!" oninput="checkInput()"></textarea>
+    </div>
+    <div class="counter-container">
+        <span class="char-counter" id="charCounter">0</span>
+    </div>
+    <button id="submitButton" onclick="submitData()">Poslat</button>
+
+    <script>
+    function checkInput() {
+        let textarea = document.querySelector('.square textarea');
+        let submitButton = document.getElementById('submitButton');
+        let charCounter = document.getElementById('charCounter');
+
+        let charCount = textarea.value.length;
+        charCounter.textContent = charCount;
+
+        if (charCount >= 3 && charCount <= 700) {
+            submitButton.style.display = 'block';
+        } else {
+            submitButton.style.display = 'none';
+        }
+    }
+
+    function submitData() {
+        let textarea = document.querySelector('.square textarea');
+        let textData = textarea.value;
+        let charCount = textData.length;
+
+        if (charCount < 3 || charCount > 700) {
+            alert("Text must be between 3 and 700 characters.");
+            return;
+        }
+
+        fetch('https://my-web-ufqo.onrender.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: textData })
+        })
+        .then(response => response.json())
+        .then(data => alert("Submitted!")) // Display "Submitted!" message
+        .catch(error => console.error('Error:', error));
+    }
+    </script>
+</body>
+</html>
